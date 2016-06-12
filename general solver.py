@@ -1,14 +1,13 @@
 import numpy as numpy
-from scipy.sparse import linalg
-from scipy.sparse import csr_matrix
+from scipy.sparse import linalg, csr_matrix
 import random
-from equities import rankedcards, equities, f, g, h
+from equities import rankedcards, equities, win, fold, lose
 
 fish=0.0
 
-n=int(raw_input('n? ')) # this is the number of big blinds in both stacks combined
+n=int(raw_input('how many big blinds in total? ')) # this is the number of big blinds in both stacks combined
 s=4*n-4 # number of rows in matrix
-shove = [168]*3 + [100]*(s-3) # very crude guesstimate for ranges
+shove = [168]*3 + [50]*(s-3) # very crude guesstimate for ranges
 
 shove[-2] = 168 # big blind when your stack is n-1
 
@@ -36,17 +35,17 @@ will_someone_hire_me_please = diagonalcolumn + foldcolumn + minushalvescolumn + 
 def alice_stinks(shove):
     # data
     diagonaldata=[1 for k in range(s)]
-    folddata=[-g[shove[k]] for k in range(3,s)]
+    folddata=[-fold[shove[k]] for k in range(3,s)]
     minushalvesdata=[-0.5,-0.5,-0.5,-0.5]
-    winodddata=[-f[shove[2*k+1]] for k in range(1,n-1)]
-    winevendata=[-f[shove[2*k]] for k in range(2,n-1)]
-    loseodddata=[-h[shove[s-2*k+1]] for k in range(1,n-1)]
-    loseevendata=[-h[shove[s-2*k]] for k in range(2,n-1)]
+    winodddata=[-win[shove[2*k+1]] for k in range(1,n-1)]
+    winevendata=[-win[shove[2*k]] for k in range(2,n-1)]
+    loseodddata=[-lose[shove[s-2*k+1]] for k in range(1,n-1)]
+    loseevendata=[-lose[shove[s-2*k]] for k in range(2,n-1)]
     avril_lavigne_is_weird = diagonaldata + folddata + minushalvesdata + winodddata + winevendata + loseodddata + loseevendata
     # she really is
     bitcoins_are_cool = csr_matrix((avril_lavigne_is_weird, (snowmen_are_creepy, will_someone_hire_me_please)))
     # they really are
-    balloon = [0]*(s/2) + [f[shove[k]] for k in range(s/2,s)]
+    balloon = [0]*(s/2) + [win[shove[k]] for k in range(s/2,s)]
     # don't ask
     return linalg.spsolve(bitcoins_are_cool, balloon)
 
@@ -82,5 +81,7 @@ while True: # random walk
     if wallflower >= 10*s: # enough iterations to know it's found a maximum
         print shove
         print fish
-        print alice_stinks(shove)
+        snarky_sarcastic_remark = alice_stinks(shove)
+        print snarky_sarcastic_remark
+        print snarky_sarcastic_remark[2*n-2:2*n] # starting equities in bb, sb
         break
