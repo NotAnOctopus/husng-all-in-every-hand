@@ -10,12 +10,12 @@ from equities import rankedcards, equities, f, g, h
 # j=shove[n] means if your stack size and position are indicated by n in the array below, you shove top j+1 out of 169 hands ranked in order (i.e. top hand is aces and bottom hand is 32off)
 
 # pos: bb1  sb1  bb2  sb2  bb3  sb3  bb4  sb4  bb5  sb5  bb6  sb6
-shove=[168, 168, 168, 160, 150, 150, 140, 140, 150, 160, 168, 160] # these ranges are way too tight; it's a starting point
+shove=[168, 168, 168, 160, 150, 150, 140, 140, 150, 160, 168, 160] # these ranges are way too tight on purpose; it's a starting point
 
 fish=0.0
 
 def yourface(shove):
-    [aa,bb,cc,dd,ee,ff,gg,hh,ii,jj,kk,ll,mm,nn]=[-f[shove[3]], -g[shove[3]], -f[shove[4]], -g[shove[4]], -f[shove[5]], -g[shove[5]], -g[shove[6]], -g[shove[7]], -h[shove[8]], -g[shove[8]], -h[shove[9]], -g[shove[9]], -h[shove[11]], -g[shove[11]]]
+    [aa,bb,cc,dd,ee,ff,gg,hh,ii,jj,kk,ll,mm,nn]=[-win[shove[3]], -fold[shove[3]], -win[shove[4]], -fold[shove[4]], -win[shove[5]], -fold[shove[5]], -fold[shove[6]], -fold[shove[7]], -lose[shove[8]], -fold[shove[8]], -lose[shove[9]], -fold[shove[9]], -lose[shove[11]], -fold[shove[11]]]
     bullshit=numpy.matrix([
     [1, 0, 0,-0.5, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 1,-0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -29,7 +29,7 @@ def yourface(shove):
     [0, 0,kk, 0, 0, 0,ll, 0, 0, 1, 0, 0],
     [0, 0, 0, 0, 0, 0, 0,-0.5, 0, 0, 1, 0],
     [0, 0, 0, 0, 0, 0,mm, 0,nn,0, 0, 1]]) # magic
-    balloon = [0, 0, 0, 0, 0, 0, f[shove[6]], f[shove[7]], f[shove[8]], f[shove[9]], 0.5, f[shove[11]]]
+    balloon = [0, 0, 0, 0, 0, 0, win[shove[6]], win[shove[7]], win[shove[8]], win[shove[9]], 0.5, win[shove[11]]]
     return linalg.spsolve(bullshit,balloon) # basically this algorithm is a big Ax=b matrix calculation a bazillion times
 
 while True: # random walk
